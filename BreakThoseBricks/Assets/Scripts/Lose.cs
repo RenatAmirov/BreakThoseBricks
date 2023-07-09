@@ -5,10 +5,16 @@ using UnityEngine;
 public class Lose : MonoBehaviour
 {
     private Ball ball;
+    private GameManager gameManager;
 
     IEnumerator Pause()
     {
         print("Before Waiting 2 seconds");
+
+        //Switch GameManager State
+        gameManager = GameObject.FindObjectOfType<GameManager>();
+        gameManager.SwitchState(GameState.Failed);
+
         yield return new WaitForSeconds(2);
 
         //Find the ball and reset game start

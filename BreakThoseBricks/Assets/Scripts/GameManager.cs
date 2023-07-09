@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 //List of all the possible gamestates
 public enum GameState
@@ -44,6 +45,9 @@ public class GameManager : MonoBehaviour
         print("Balls:" + allBalls.Length);
         print("Paddle" + paddle);
 
+        //Change start text
+        ChangeText("Click To Begin");   
+
         //Prepare the start of the level
         SwitchState(GameState.NotStarted);
     }
@@ -54,6 +58,9 @@ public class GameManager : MonoBehaviour
         switch (currentState)
         {
             case GameState.NotStarted:
+                //Change start text
+                ChangeText("Click To Begin");
+
                 //Check if the player taps/clicks.
                 if (Input.GetMouseButtonDown(0)) //Note: on mobile this will translate to the first touch / finger so perfectly multiplatform!
                 {
@@ -66,8 +73,13 @@ public class GameManager : MonoBehaviour
                     minutes = Mathf.FloorToInt(Timer / 60F);
                     seconds = Mathf.FloorToInt(Timer - minutes * 60);
                     formattedTime = string.Format("{0:0}:{1:00}", minutes, seconds);
+
                     //Display Time
                     //print(formattedTime);
+
+                    //Change start text
+                    ChangeText("Time: " + formattedTime);
+
                     bool allBlocksDestroyed = false;
                     //Are there no balls left?
                     if (FindObjectOfType(typeof(Ball)) == null)
@@ -79,6 +91,7 @@ public class GameManager : MonoBehaviour
             //Both cases do the same: restart the game
             case GameState.Failed:
                 print("Gamestate Failed!");
+                ChangeText("You Lose :(");
                 break;
             case GameState.Completed:
                 bool allBlocksDestroyedFinal = false;
@@ -90,6 +103,14 @@ public class GameManager : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    public void ChangeText(string text)
+    {
+        //Find Canvas and modify text
+        GameObject canvas = GameObject.Find("Canvas");
+        Text[] textValue = canvas.GetComponentsInChildren<Text>();
+        textValue[0].text = text;
     }
 
     public void SwitchState(GameState newState)
